@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMART on FHIR - Epic App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    
+    .container {
+      text-align: center;
+      padding: 40px;
+      max-width: 600px;
+    }
+    
+    .logo {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .subtitle {
+      color: #a0a0a0;
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+    
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .card h2 {
+      color: #00d4ff;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+    
+    .card p {
+      color: #ccc;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .feature {
+      background: rgba(0, 212, 255, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      text-align: left;
+    }
+    
+    .feature-icon {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+    
+    .feature-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #00d4ff;
+    }
+    
+    .feature-desc {
+      font-size: 0.85rem;
+      color: #a0a0a0;
+    }
+    
+    .launch-btn {
+      display: inline-block;
+      background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+      color: white;
+      padding: 18px 50px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+    }
+    
+    .launch-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0, 212, 255, 0.4);
+    }
+    
+    .info {
+      margin-top: 30px;
+      padding: 20px;
+      background: rgba(123, 44, 191, 0.1);
+      border-radius: 10px;
+      border-left: 4px solid #7b2cbf;
+      text-align: left;
+    }
+    
+    .info h3 {
+      color: #7b2cbf;
+      margin-bottom: 10px;
+    }
+    
+    .info ul {
+      list-style: none;
+      color: #ccc;
+    }
+    
+    .info li {
+      padding: 5px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+    
+    .info li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #00d4ff;
+    }
+    
+    .badge {
+      display: inline-block;
+      background: rgba(0, 212, 255, 0.2);
+      color: #00d4ff;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin: 5px;
+    }
+
+    .demo-btn {
+      display: inline-block;
+      background: transparent;
+      color: #a0a0a0;
+      padding: 12px 30px;
+      font-size: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 30px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+
+    .demo-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(0, 212, 255, 0.5);
+      color: #00d4ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">🏥</div>
+    <h1>Patient Health Viewer</h1>
+    <p class="subtitle">SMART on FHIR Application for Epic</p>
+    
+    <div class="card">
+      <h2>What This App Does</h2>
+      <p>This application connects to Cerner's FHIR API to display patient health information securely using the SMART on FHIR standard.</p>
+      
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">👤</div>
+          <div class="feature-title">Patient Info</div>
+          <div class="feature-desc">Demographics & contact details</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔬</div>
+          <div class="feature-title">Lab Results</div>
+          <div class="feature-desc">Recent observations & vitals</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📋</div>
+          <div class="feature-title">Conditions</div>
+          <div class="feature-desc">Active diagnoses & problems</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">💊</div>
+          <div class="feature-title">Medications</div>
+          <div class="feature-desc">Current prescriptions</div>
+        </div>
+      </div>
+    </div>
+    
+    <a href="/launch" class="launch-btn">🚀 Connect to Epic</a>
+    
+    <p style="margin-top: 15px; color: #666; font-size: 0.9rem;">— or —</p>
+    
+    <a href="/demo" class="demo-btn">👀 View Demo (No Login Required)</a>
+    
+    <div class="info">
+      <h3>Security & Compliance</h3>
+      <ul>
+        <li>OAuth 2.0 with PKCE authentication</li>
+        <li>Scoped access (only requested data)</li>
+        <li>No data stored on server</li>
+        <li>HIPAA-compliant workflow</li>
+      </ul>
+    </div>
+    
+    <div style="margin-top: 20px;">
+      <span class="badge">FHIR R4</span>
+      <span class="badge">SMART STU2</span>
+      <span class="badge">OAuth 2.0</span>
+      <span class="badge">PKCE</span>
+    </div>
+  </div>
+</body>
+</html>

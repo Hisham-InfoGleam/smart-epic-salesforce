@@ -1,0 +1,324 @@
+# 🏥 Epic FHIR Integration POC
+
+A comprehensive Proof of Concept demonstrating **two integration patterns** with Epic's FHIR R4 API:
+
+1. **Node.js SMART on FHIR App** - Patient-facing portal with OAuth2 + PKCE
+2. **Salesforce Health Cloud Integration** - Enterprise EHR connectivity via LWC + Apex
+
+> 🎯 **Portfolio Project** showcasing HealthTech interoperability skills for enterprise clients
+
+---
+
+## 🏗️ Architecture Overview
+
+```
+                              ┌─────────────────────────────────────┐
+                              │         Epic FHIR R4 API            │
+                              │   fhir.epic.com/interconnect-...    │
+                              └──────────────┬──────────────────────┘
+                                             │
+                    ┌────────────────────────┼────────────────────────┐
+                    │                        │                        │
+                    ▼                        ▼                        ▼
+        ┌───────────────────┐    ┌───────────────────┐    ┌───────────────────┐
+        │   /metadata       │    │   OAuth2 + PKCE   │    │   FHIR Resources  │
+        │   (No Auth)       │    │   Authorization   │    │   Patient, Obs... │
+        └─────────┬─────────┘    └─────────┬─────────┘    └─────────┬─────────┘
+                  │                        │                        │
+    ┌─────────────┴─────────────┐          │                        │
+    │                           │          │                        │
+    ▼                           ▼          ▼                        ▼
+┌─────────┐              ┌─────────────────────────────────────────────┐
+│Salesforce│              │         Node.js SMART App                  │
+│Health   │              │         (server.js + public/)              │
+│Cloud    │              └─────────────────────────────────────────────┘
+└─────────┘
+```
+
+---
+
+## 📂 Project Structure
+
+```
+smart-epic-salesforce/
+├── server.js                    # Node.js SMART on FHIR backend
+├── public/
+│   ├── index.html               # Launch page
+│   └── dashboard.html           # Patient data display
+├── salesforce/                  # Salesforce integration
+│   ├── README.md                # Salesforce-specific setup
+│   └── force-app/main/default/
+│       ├── classes/
+│       │   ├── EpicConnectionController.cls
+│       │   └── EpicConnectionControllerTest.cls
+│       └── lwc/epicConnectivityCheck/
+│           ├── epicConnectivityCheck.html
+│           ├── epicConnectivityCheck.js
+│           └── epicConnectivityCheck.js-meta.xml
+└── .env                         # Configuration (not in repo)
+```
+
+---
+
+## 🚀 Part 1: Node.js SMART on FHIR App
+
+### Features
+
+- **OAuth 2.0 with PKCE** - Secure authentication required by Epic
+- **Standalone Launch** - Patient portal style login
+- **FHIR R4 API** - Query patient data using standard FHIR resources
+- **Beautiful Dashboard** - Display patient health information
+
+### Quick Start
+
+### Step 1: Register Your App on Epic (5 minutes)
+
+1. Go to **https://fhir.epic.com**
+2. Click **"Sign Up"** and create a free developer account
+3. After login, click **"Build Apps"** → **"Create"**
+4. Fill in the application details:
+
+| Field | Value |
+|-------|-------|
+| **Application Name** | Patient Health Viewer |
+| **Application Audience** | Patients |
+| **Incoming APIs** | Select all Patient-related APIs |
+
+5. Under **"Redirect URIs"**, add:
+   ```
+   http://localhost:3000/callback
+   ```
+
+6. Under **"SMART on FHIR Version"**, select:
+   - **SMART on FHIR version**: R4
+   - **Can use PKCE**: Yes (required)
+
+7. Click **"Save & Ready for Sandbox"**
+
+8. Copy your **Non-Production Client ID** (NOT Production)
+
+---
+
+### Step 2: Configure the App
+
+```bash
+# Navigate to app folder
+cd smart-epic-salesforce
+
+# Edit .env file and add your Client ID
+notepad .env
+```
+
+Update the `CLIENT_ID` line:
+```env
+CLIENT_ID=paste-your-non-production-client-id-here
+```
+
+---
+
+### Step 3: Install and Run
+
+```bash
+# Install dependencies
+npm install
+
+# Start the server
+npm start
+```
+
+---
+
+### Step 4: Test the App
+
+1. Open **http://localhost:3000** in your browser
+2. Click **"Connect to Epic"**
+3. You'll see Epic's MyChart login screen
+4. Login with Epic sandbox test credentials:
+
+| Username | Password | Patient Type |
+|----------|----------|--------------|
+| `fhirjason` | `epicepic1` | Adult male with conditions |
+| `fhircamila` | `epicepic1` | Adult female |
+| `fhirderrick` | `epicepic1` | Adult with medications |
+| `fhiremma` | `epicepic1` | Pediatric patient |
+
+5. Authorize the app when prompted
+6. View the patient dashboard with real Epic test data!
+
+---
+
+## 📁 Project Structure
+
+See **Architecture Overview** section at the top for the full project structure.
+
+---
+
+## � Part 2: Salesforce Health Cloud Integration
+
+This demonstrates **enterprise-grade** connectivity between Salesforce and Epic using Named Credentials (no secrets in code).
+
+### Why This Approach?
+
+| Aspect | Benefit |
+|--------|---------|
+| **Named Credentials** | Secrets managed by Salesforce, not in code |
+| **`/metadata` Endpoint** | Proves connectivity without PHI |
+| **Capability Discovery** | Shows understanding of FHIR architecture |
+
+### Quick Start
+
+1. **Get Salesforce Dev Org**: [developer.salesforce.com/signup](https://developer.salesforce.com/signup)
+
+2. **Configure Remote Site Settings**:
+   - Setup → Security → Remote Site Settings
+   - Add `https://fhir.epic.com`
+
+3. **Create Named Credential**:
+   - Setup → Security → Named Credentials
+   - URL: `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4`
+
+4. **Deploy Code**:
+   ```bash
+   cd salesforce
+   sfdx force:source:deploy -p force-app -u YourOrgAlias
+   ```
+
+5. **Add LWC to Page**: Use Lightning App Builder to add the component
+
+See [salesforce/README.md](salesforce/README.md) for detailed setup.
+
+---
+
+## �🔐 OAuth + PKCE Flow (Required by Epic)
+
+```
+┌──────────────┐     ┌─────────────────┐     ┌───────────────┐
+│  Your App    │     │  Epic Auth      │     │  Epic FHIR    │
+│  (localhost) │     │  Server         │     │  Server       │
+└──────┬───────┘     └────────┬────────┘     └───────┬───────┘
+       │                      │                      │
+       │ 1. Generate PKCE:    │                      │
+       │    code_verifier     │                      │
+       │    code_challenge    │                      │
+       │                      │                      │
+       │ 2. Authorization request + code_challenge   │
+       │──────────────────────>                      │
+       │                      │                      │
+       │ 3. Epic MyChart      │                      │
+       │    Login Screen      │                      │
+       │<──────────────────────                      │
+       │                      │                      │
+       │ 4. User logs in      │                      │
+       │──────────────────────>                      │
+       │                      │                      │
+       │ 5. Authorization code│                      │
+       │<──────────────────────                      │
+       │                      │                      │
+       │ 6. Token request     │                      │
+       │    + code_verifier   │ (Epic verifies PKCE) │
+       │──────────────────────>                      │
+       │                      │                      │
+       │ 7. Access token      │                      │
+       │<──────────────────────                      │
+       │                      │                      │
+       │ 8. FHIR API requests (with Bearer token)    │
+       │─────────────────────────────────────────────>
+       │                      │                      │
+       │ 9. Patient data                             │
+       │<─────────────────────────────────────────────
+```
+
+### Why PKCE?
+
+Epic requires PKCE (Proof Key for Code Exchange) since **August 2020** for all public clients. It prevents authorization code interception attacks:
+
+```javascript
+// 1. Generate random code_verifier (keep secret)
+const codeVerifier = crypto.randomBytes(32).toString('base64url');
+
+// 2. Hash it to create code_challenge (send to Epic)
+const codeChallenge = crypto.createHash('sha256')
+  .update(codeVerifier)
+  .digest('base64url');
+
+// 3. Epic verifies: SHA256(code_verifier) === code_challenge
+```
+
+---
+
+## 📊 FHIR Resources Demonstrated
+
+| Resource | Description | Epic Endpoint |
+|----------|-------------|---------------|
+| **Patient** | Demographics, identifiers | `/Patient/{id}` |
+| **Observation** | Lab results, vitals | `/Observation?patient={id}` |
+| **Condition** | Diagnoses, problems | `/Condition?patient={id}` |
+| **MedicationRequest** | Active prescriptions | `/MedicationRequest?patient={id}` |
+
+---
+
+## 🔗 Resources
+
+- [Epic on FHIR](https://fhir.epic.com) - Official Epic developer portal
+- [Epic Sandbox Docs](https://fhir.epic.com/Documentation) - API documentation
+- [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/) - SMART specification
+- [FHIR R4](https://hl7.org/fhir/R4/) - FHIR specification
+
+---
+
+## 🐛 Troubleshooting
+
+### "Invalid client_id"
+- Make sure you're using the **Non-Production Client ID** (not Production)
+- Verify the Client ID is copied correctly with no extra spaces
+
+### "Redirect URI mismatch"
+- Ensure `http://localhost:3000/callback` is added in Epic's app settings
+- Check there's no trailing slash difference
+
+### "PKCE verification failed"
+- This shouldn't happen with this code, but ensure you're not modifying the PKCE logic
+
+### "Access denied" after login
+- Make sure you selected the correct FHIR scopes when registering
+- Try re-creating the app with all Patient-related scopes
+
+---
+
+## � Known Limitations & Future Work
+
+> **This is a Proof of Concept (POC)** - some features require additional setup to fully test.
+
+### Node.js App
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Demo Mode | ✅ Complete | Works out of the box with sample data |
+| OAuth + PKCE Flow | ✅ Complete | Requires Epic app registration to test live |
+| FHIR R4 Queries | ✅ Complete | Patient, Observations, Conditions, Medications |
+| Session Management | ✅ Complete | Express sessions with secure cookies |
+
+### Salesforce Integration
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Apex Classes | ✅ Code Complete | Requires Salesforce org deployment to test |
+| LWC Components | ✅ Code Complete | Requires Salesforce org deployment to test |
+| Unit Tests | ✅ Code Complete | Mock HTTP callouts included |
+| Named Credentials | ⚠️ Setup Required | Must configure in target Salesforce org |
+| Health Cloud Objects | 📋 Optional | Can use standard Contact for basic POC |
+
+### To Complete Full Testing
+
+1. **Epic Live Auth**: Register app at https://fhir.epic.com and add your CLIENT_ID to `.env`
+2. **Salesforce Deployment**: Install Salesforce CLI and deploy to a Developer org:
+   ```bash
+   npm install -g @salesforce/cli
+   sf org login web -a MyDevOrg
+   cd salesforce && sf project deploy start -d force-app -o MyDevOrg
+   sf apex run test -n EpicConnectionControllerTest -n EpicPatientServiceTest -o MyDevOrg
+   ```
+
+---
+
+## �📄 License
+
+MIT License - Use freely for learning and portfolio.

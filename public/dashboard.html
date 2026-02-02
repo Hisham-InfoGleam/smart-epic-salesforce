@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Dashboard - SMART on FHIR</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f0f1a;
+      color: #fff;
+      min-height: 100vh;
+    }
+    
+    .header {
+      background: linear-gradient(90deg, #1a1a2e, #16213e);
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .header h1 {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .header h1 span {
+      background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .logout-btn {
+      background: rgba(255, 100, 100, 0.2);
+      color: #ff6b6b;
+      padding: 10px 20px;
+      border: 1px solid rgba(255, 100, 100, 0.3);
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    
+    .logout-btn:hover {
+      background: rgba(255, 100, 100, 0.3);
+    }
+    
+    .main {
+      padding: 30px 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .patient-header {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(123, 44, 191, 0.1));
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+    
+    .patient-avatar {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+    
+    .patient-info h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    
+    .patient-meta {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .meta-item {
+      background: rgba(255,255,255,0.05);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: #a0a0a0;
+    }
+    
+    .meta-item strong {
+      color: #00d4ff;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 25px;
+    }
+    
+    .card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    
+    .card-header {
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    
+    .card-header-icon {
+      font-size: 1.5rem;
+    }
+    
+    .card-header h3 {
+      font-size: 1.1rem;
+      color: #00d4ff;
+    }
+    
+    .card-body {
+      padding: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .item {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 12px;
+      transition: all 0.3s;
+    }
+    
+    .item:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(0, 212, 255, 0.3);
+    }
+    
+    .item-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    
+    .item-value {
+      font-size: 1.3rem;
+      color: #00d4ff;
+      margin-bottom: 5px;
+    }
+    
+    .item-meta {
+      font-size: 0.85rem;
+      color: #666;
+    }
+    
+    .item-date {
+      font-size: 0.8rem;
+      color: #7b2cbf;
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .status-active {
+      background: rgba(0, 200, 150, 0.2);
+      color: #00c896;
+    }
+    
+    .status-completed {
+      background: rgba(100, 100, 255, 0.2);
+      color: #8888ff;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(0, 212, 255, 0.1);
+      border-top-color: #00d4ff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .error {
+      background: rgba(255, 100, 100, 0.1);
+      border: 1px solid rgba(255, 100, 100, 0.3);
+      color: #ff6b6b;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    
+    .empty {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+    }
+    
+    .session-info {
+      background: rgba(123, 44, 191, 0.1);
+      border: 1px solid rgba(123, 44, 191, 0.3);
+      border-radius: 10px;
+      padding: 15px 20px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .session-info span {
+      color: #a0a0a0;
+      font-size: 0.9rem;
+    }
+    
+    .session-info code {
+      background: rgba(0,0,0,0.3);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      color: #00d4ff;
+    }
+    
+    /* Custom scrollbar */
+    .card-body::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .card-body::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+    }
+    
+    .card-body::-webkit-scrollbar-thumb {
+      background: rgba(0, 212, 255, 0.3);
+      border-radius: 3px;
+    }
+
+    .demo-banner {
+      background: linear-gradient(90deg, #7b2cbf, #5a189a);
+      color: white;
+      text-align: center;
+      padding: 12px 20px;
+      font-size: 0.95rem;
+    }
+
+    .demo-banner a {
+      color: #00d4ff;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>🏥 <span>Patient Health Dashboard</span></h1>
+    <a href="/logout" class="logout-btn">🚪 Logout</a>
+  </header>
+
+  <!-- Demo Mode Banner -->
+  <div class="demo-banner" id="demo-banner" style="display: none;">
+    <span>📋 Demo Mode — Showing sample FHIR data. <a href="/launch">Connect to Epic</a> for real patient data.</span>
+  </div>
+  
+  <main class="main">
+    <div class="session-info">
+      <span>Connected to: <code id="fhir-server">Loading...</code></span>
+      <span>Patient ID: <code id="patient-id">Loading...</code></span>
+    </div>
+    
+    <div class="patient-header" id="patient-header">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading patient information...</p>
+      </div>
+    </div>
+    
+    <div class="grid">
+      <!-- Observations Card -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-header-icon">🔬</span>
+          <h3>Lab Results & Vitals</h3>
+        </div>
+        <div class="card-body" id="observations-list">
+          <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading observations...</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Conditions Card -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-header-icon">📋</span>
+          <h3>Conditions & Diagnoses</h3>
+        </div>
+        <div class="card-body" id="conditions-list">
+          <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading conditions...</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Medications Card -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-header-icon">💊</span>
+          <h3>Medications</h3>
+        </div>
+        <div class="card-body" id="medications-list">
+          <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading medications...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <script>
+    // ============================================
+    // Fetch and Display Data
+    // ============================================
+
+    function getCodeableConceptDisplay(cc) {
+      if (!cc) return null;
+      if (typeof cc.text === 'string' && cc.text.trim()) return cc.text.trim();
+      const coding = Array.isArray(cc.coding) ? cc.coding : [];
+      const first = coding.find(c => c && (c.display || c.code)) || coding[0];
+      if (!first) return null;
+      return (first.display || first.code || '').toString().trim() || null;
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return null;
+      const d = new Date(dateString);
+      if (Number.isNaN(d.getTime())) return null;
+      return d.toLocaleDateString();
+    }
+
+    function getObservationDate(obs) {
+      return (
+        formatDate(obs?.effectiveDateTime) ||
+        formatDate(obs?.effectivePeriod?.start) ||
+        formatDate(obs?.issued) ||
+        formatDate(obs?.meta?.lastUpdated) ||
+        null
+      );
+    }
+
+    function formatQuantity(q) {
+      if (!q || typeof q.value === 'undefined' || q.value === null) return null;
+      const unit = q.unit || q.code || '';
+      return `${q.value}${unit ? ` ${unit}` : ''}`;
+    }
+
+    function formatObservationValue(obs) {
+      if (!obs) return null;
+
+      const direct =
+        formatQuantity(obs.valueQuantity) ||
+        getCodeableConceptDisplay(obs.valueCodeableConcept) ||
+        (typeof obs.valueString === 'string' && obs.valueString.trim() ? obs.valueString.trim() : null) ||
+        (typeof obs.valueBoolean === 'boolean' ? String(obs.valueBoolean) : null) ||
+        (typeof obs.valueInteger === 'number' ? String(obs.valueInteger) : null);
+
+      if (direct) return direct;
+
+      // Many vital signs use Observation.component (e.g., BP systolic/diastolic)
+      const components = Array.isArray(obs.component) ? obs.component : [];
+      const parts = components
+        .map(c => {
+          const label = getCodeableConceptDisplay(c.code) || 'Component';
+          const val =
+            formatQuantity(c.valueQuantity) ||
+            getCodeableConceptDisplay(c.valueCodeableConcept) ||
+            (typeof c.valueString === 'string' && c.valueString.trim() ? c.valueString.trim() : null);
+          if (!val) return null;
+          return `${label}: ${val}`;
+        })
+        .filter(Boolean);
+
+      return parts.length ? parts.join(' / ') : null;
+    }
+
+    function getObservationTitle(obs) {
+      const direct = getCodeableConceptDisplay(obs?.code);
+      if (direct) return direct;
+
+      const category = getCodeableConceptDisplay(obs?.category?.[0]);
+      if (category) return category;
+
+      const components = Array.isArray(obs?.component) ? obs.component : [];
+      if (components.length) return 'Composite Observation';
+
+      if (Array.isArray(obs?.hasMember) && obs.hasMember.length) {
+        return `Observation Panel (${obs.hasMember.length})`;
+      }
+
+      return 'Observation';
+    }
+
+    function getMedicationRequestName(med) {
+      // medication[x] can be CodeableConcept or Reference
+      const fromCC = getCodeableConceptDisplay(med?.medicationCodeableConcept);
+      if (fromCC) return fromCC;
+
+      const refDisplay = med?.medicationReference?.display;
+      if (typeof refDisplay === 'string' && refDisplay.trim()) return refDisplay.trim();
+
+      const ref = med?.medicationReference?.reference;
+      const contained = Array.isArray(med?.contained) ? med.contained : [];
+      if (typeof ref === 'string' && ref.startsWith('#')) {
+        const id = ref.slice(1);
+        const resource = contained.find(r => r && r.id === id);
+        const name = getCodeableConceptDisplay(resource?.code);
+        if (name) return name;
+      }
+
+      // Fallback: try to extract from identifier or extension
+      const identifier = med?.identifier?.[0];
+      if (identifier?.value && typeof identifier.value === 'string') {
+        return `Medication (ID: ${identifier.value.slice(0, 20)})`;
+      }
+
+      // Fallback: try reasonCode or category
+      const reason = getCodeableConceptDisplay(med?.reasonCode?.[0]);
+      if (reason) return `Medication for ${reason}`;
+
+      const category = getCodeableConceptDisplay(med?.category?.[0]);
+      if (category) return `${category} Medication`;
+
+      // Fallback: use status if available
+      if (med?.status) return `${med.status.charAt(0).toUpperCase() + med.status.slice(1)} Medication`;
+
+      return null;
+    }
+
+    function statusClass(status) {
+      const normalized = (status || '').toLowerCase();
+      if (normalized === 'active') return 'active';
+      if (normalized === 'final' || normalized === 'amended' || normalized === 'corrected') return 'completed';
+      if (normalized === 'completed' || normalized === 'stopped' || normalized === 'entered-in-error') return 'completed';
+      return 'active';
+    }
+    
+    async function loadSessionInfo() {
+      try {
+        const response = await fetch('/api/session');
+        const data = await response.json();
+        
+        document.getElementById('fhir-server').textContent = data.fhirBaseUrl || 'Unknown';
+        document.getElementById('patient-id').textContent = data.patientId || 'Unknown';
+        
+        // Show demo banner if in demo mode
+        if (data.demoMode) {
+          document.getElementById('demo-banner').style.display = 'block';
+        }
+        
+      } catch (error) {
+        console.error('Session info error:', error);
+      }
+    }
+    
+    async function loadPatient() {
+      const container = document.getElementById('patient-header');
+      
+      try {
+        const response = await fetch('/api/patient');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch patient');
+        }
+        
+        const patient = await response.json();
+        
+        // Extract patient details
+        const name = patient.name?.[0];
+        const fullName = name ? `${name.given?.join(' ') || ''} ${name.family || ''}`.trim() : 'Unknown';
+        const gender = patient.gender || 'Unknown';
+        const birthDate = patient.birthDate || 'Unknown';
+        const phone = patient.telecom?.find(t => t.system === 'phone')?.value || 'N/A';
+        const address = patient.address?.[0];
+        const addressStr = address ? `${address.city || ''}, ${address.state || ''}` : 'N/A';
+        
+        container.innerHTML = `
+          <div class="patient-avatar">${fullName.charAt(0).toUpperCase()}</div>
+          <div class="patient-info">
+            <h2>${fullName}</h2>
+            <div class="patient-meta">
+              <span class="meta-item"><strong>Gender:</strong> ${gender}</span>
+              <span class="meta-item"><strong>DOB:</strong> ${birthDate}</span>
+              <span class="meta-item"><strong>Phone:</strong> ${phone}</span>
+              <span class="meta-item"><strong>Location:</strong> ${addressStr}</span>
+            </div>
+          </div>
+        `;
+        
+      } catch (error) {
+        container.innerHTML = `<div class="error">Failed to load patient: ${error.message}</div>`;
+      }
+    }
+    
+    async function loadObservations() {
+      const container = document.getElementById('observations-list');
+      
+      try {
+        const response = await fetch('/api/observations');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch observations');
+        }
+        
+        const bundle = await response.json();
+        const observations = bundle.entry?.map(e => e.resource) || [];
+        
+        if (observations.length === 0) {
+          const note = bundle.note || 'No observations available for this patient.';
+          container.innerHTML = `
+            <div class="empty">
+              <p>📊 ${note}</p>
+              <p style="font-size: 0.8rem; margin-top: 10px; color: #666;">
+                To see observations, enable Observation APIs in your 
+                <a href="https://fhir.epic.com" target="_blank" style="color: #00d4ff;">Epic App Registration</a>
+              </p>
+            </div>`;
+          return;
+        }
+        
+        container.innerHTML = observations.map(obs => {
+          const code = getObservationTitle(obs);
+          const value = formatObservationValue(obs) || (Array.isArray(obs?.hasMember) && obs.hasMember.length ? `Panel (${obs.hasMember.length} items)` : 'N/A');
+          const date = getObservationDate(obs) || 'Unknown date';
+          const status = obs.status || 'unknown';
+          
+          return `
+            <div class="item">
+              <div class="item-title">${code}</div>
+              <div class="item-value">${value}</div>
+              <div class="item-meta">
+                <span class="status-badge status-${statusClass(status)}">${status}</span>
+                <span class="item-date">${date}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+      } catch (error) {
+        container.innerHTML = `<div class="error">Failed to load observations: ${error.message}</div>`;
+      }
+    }
+    
+    async function loadConditions() {
+      const container = document.getElementById('conditions-list');
+      
+      try {
+        const response = await fetch('/api/conditions');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch conditions');
+        }
+        
+        const bundle = await response.json();
+        const conditions = bundle.entry?.map(e => e.resource) || [];
+        
+        if (conditions.length === 0) {
+          container.innerHTML = '<div class="empty">No conditions found</div>';
+          return;
+        }
+        
+        container.innerHTML = conditions.map(cond => {
+          let name = getCodeableConceptDisplay(cond.code);
+          if (!name) {
+            // Try bodySite as fallback
+            name = getCodeableConceptDisplay(cond.bodySite?.[0]);
+          }
+          if (!name) {
+            // Try severity
+            name = getCodeableConceptDisplay(cond.severity);
+            if (name) name = `${name} Condition`;
+          }
+          if (!name) {
+            // Try category as last resort
+            const cat = getCodeableConceptDisplay(cond.category?.[0]);
+            if (cat) name = `${cat}`;
+          }
+          if (!name) {
+            // Use clinical status if available
+            const statusCode = cond.clinicalStatus?.coding?.[0]?.code;
+            name = statusCode ? `${statusCode.charAt(0).toUpperCase() + statusCode.slice(1)} Condition` : 'Condition';
+          }
+          const status = cond.clinicalStatus?.coding?.[0]?.code || 'unknown';
+          const onset = cond.onsetDateTime ? new Date(cond.onsetDateTime).toLocaleDateString() : (cond.onsetPeriod?.start ? new Date(cond.onsetPeriod.start).toLocaleDateString() : 'Unknown');
+          const category = cond.category?.[0]?.coding?.[0]?.display || getCodeableConceptDisplay(cond.category?.[0]) || '';
+          
+          return `
+            <div class="item">
+              <div class="item-title">${name}</div>
+              <div class="item-meta">
+                <span class="status-badge status-${status === 'active' ? 'active' : 'completed'}">${status}</span>
+                ${category ? `<span class="item-date">${category}</span>` : ''}
+              </div>
+              <div class="item-date">Onset: ${onset}</div>
+            </div>
+          `;
+        }).join('');
+        
+      } catch (error) {
+        container.innerHTML = `<div class="error">Failed to load conditions: ${error.message}</div>`;
+      }
+    }
+    
+    async function loadMedications() {
+      const container = document.getElementById('medications-list');
+      
+      try {
+        const response = await fetch('/api/medications');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch medications');
+        }
+        
+        const bundle = await response.json();
+        const medications = bundle.entry?.map(e => e.resource) || [];
+        
+        if (medications.length === 0) {
+          const note = bundle.note || 'No medications available for this patient.';
+          container.innerHTML = `
+            <div class="empty">
+              <p>💊 ${note}</p>
+              <p style="font-size: 0.8rem; margin-top: 10px; color: #666;">
+                To see medications, enable MedicationRequest API in your 
+                <a href="https://fhir.epic.com" target="_blank" style="color: #00d4ff;">Epic App Registration</a>
+              </p>
+            </div>`;
+          return;
+        }
+        
+        container.innerHTML = medications.map(med => {
+          const name = getMedicationRequestName(med) || 'Unknown Medication';
+          const status = med.status || 'unknown';
+          const dosage = med.dosageInstruction?.[0]?.text || 'Dosage not specified';
+          const authored = med.authoredOn ? new Date(med.authoredOn).toLocaleDateString() : 'Unknown';
+          
+          return `
+            <div class="item">
+              <div class="item-title">${name}</div>
+              <div class="item-meta">
+                <span class="status-badge status-${statusClass(status)}">${status}</span>
+              </div>
+              <div class="item-value" style="font-size: 0.9rem; color: #a0a0a0;">${dosage}</div>
+              <div class="item-date">Prescribed: ${authored}</div>
+            </div>
+          `;
+        }).join('');
+        
+      } catch (error) {
+        container.innerHTML = `<div class="error">Failed to load medications: ${error.message}</div>`;
+      }
+    }
+    
+    // Load all data on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSessionInfo();
+      loadPatient();
+      loadObservations();
+      loadConditions();
+      loadMedications();
+    });
+  </script>
+</body>
+</html>

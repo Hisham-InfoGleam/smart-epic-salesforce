@@ -1,0 +1,248 @@
+<template>
+    <lightning-card title="Epic Patient Search & Sync" icon-name="standard:patient">
+        <!-- Search Bar -->
+        <div slot="actions">
+            <lightning-button 
+                label="Refresh Connection" 
+                icon-name="utility:refresh" 
+                onclick={refreshConnection}
+                disabled={isLoading}>
+            </lightning-button>
+        </div>
+
+        <div class="slds-p-around_medium">
+            <!-- Connection Status -->
+            <div class="slds-box slds-m-bottom_medium slds-theme_shade">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1-of-3">
+                        <p class="slds-text-title_caps slds-text-color_weak slds-m-bottom_xx-small">Status</p>
+                        <p class={connectionStatusClass}>
+                            <lightning-icon 
+                                icon-name={connectionIcon} 
+                                size="xx-small" 
+                                class="slds-m-right_xx-small">
+                            </lightning-icon>
+                            <strong>{connectionStatus}</strong>
+                        </p>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <p class="slds-text-title_caps slds-text-color_weak slds-m-bottom_xx-small">FHIR Version</p>
+                        <p><strong>{fhirVersion}</strong></p>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <p class="slds-text-title_caps slds-text-color_weak slds-m-bottom_xx-small">Server</p>
+                        <p><strong>Epic Sandbox</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Section -->
+            <div class="slds-box slds-m-bottom_medium">
+                <h3 class="slds-text-heading_small slds-m-bottom_small">
+                    <lightning-icon icon-name="utility:search" size="small" class="slds-m-right_x-small"></lightning-icon>
+                    Search Epic Patients
+                </h3>
+                
+                <div class="slds-grid slds-gutters slds-wrap">
+                    <div class="slds-col slds-size_2-of-3">
+                        <lightning-input
+                            type="text"
+                            label="Patient Name"
+                            placeholder="Enter patient name (e.g., Argonaut, Smith)"
+                            value={searchTerm}
+                            onchange={handleSearchTermChange}>
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3 slds-align-bottom">
+                        <lightning-button 
+                            variant="brand" 
+                            label="Search Epic"
+                            icon-name="utility:search"
+                            onclick={searchPatients}
+                            disabled={isSearchDisabled}>
+                        </lightning-button>
+                    </div>
+                </div>
+
+                <!-- Demo Note -->
+                <div class="slds-m-top_small slds-text-color_weak slds-text-body_small">
+                    <lightning-icon icon-name="utility:info" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                    Try searching for "Argonaut" or "Camila" (Epic sandbox test patients)
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <div class="slds-align_absolute-center slds-p-around_large">
+                    <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+                    <p class="slds-m-top_small slds-text-color_weak">{loadingMessage}</p>
+                </div>
+            </template>
+
+            <!-- Error Display -->
+            <template if:true={error}>
+                <div class="slds-notify slds-notify_alert slds-alert_error slds-m-bottom_medium" role="alert">
+                    <lightning-icon icon-name="utility:error" variant="inverse" size="small" class="slds-m-right_x-small"></lightning-icon>
+                    <h2>{error}</h2>
+                </div>
+            </template>
+
+            <!-- Search Results -->
+            <template if:true={hasSearchResults}>
+                <div class="slds-box slds-m-bottom_medium">
+                    <h3 class="slds-text-heading_small slds-m-bottom_small">
+                        <lightning-icon icon-name="standard:people" size="small" class="slds-m-right_x-small"></lightning-icon>
+                        Search Results ({searchResults.length} patients found)
+                    </h3>
+                    
+                    <div class="slds-scrollable_y" style="max-height: 400px;">
+                        <template for:each={searchResults} for:item="patient">
+                            <div key={patient.epicId} class="slds-box slds-m-bottom_small slds-theme_default patient-card">
+                                <div class="slds-grid slds-gutters">
+                                    <div class="slds-col slds-size_1-of-12">
+                                        <lightning-avatar 
+                                            initials={patient.initials}
+                                            size="medium"
+                                            variant="circle">
+                                        </lightning-avatar>
+                                    </div>
+                                    <div class="slds-col slds-size_7-of-12">
+                                        <p class="slds-text-heading_small">
+                                            <strong>{patient.fullName}</strong>
+                                        </p>
+                                        <p class="slds-text-body_small slds-text-color_weak">
+                                            <lightning-icon icon-name="utility:identity" size="xx-small"></lightning-icon>
+                                            Epic ID: {patient.epicId}
+                                        </p>
+                                        <p class="slds-text-body_small">
+                                            <span class="slds-badge slds-badge_lightest slds-m-right_x-small">{patient.gender}</span>
+                                            <span>DOB: {patient.birthDate}</span>
+                                            <template if:true={patient.phone}>
+                                                <span class="slds-m-left_small">📞 {patient.phone}</span>
+                                            </template>
+                                        </p>
+                                    </div>
+                                    <div class="slds-col slds-size_4-of-12 slds-text-align_right">
+                                        <lightning-button-group>
+                                            <lightning-button 
+                                                label="View Details"
+                                                icon-name="utility:preview"
+                                                onclick={handleViewPatient}
+                                                data-patient-id={patient.epicId}>
+                                            </lightning-button>
+                                            <lightning-button 
+                                                label="Sync to Salesforce"
+                                                icon-name="utility:sync"
+                                                variant="brand"
+                                                onclick={handleSyncPatient}
+                                                data-patient-id={patient.epicId}>
+                                            </lightning-button>
+                                        </lightning-button-group>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Selected Patient Detail -->
+            <template if:true={selectedPatient}>
+                <div class="slds-box slds-theme_shade">
+                    <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                        <div class="slds-col">
+                            <h3 class="slds-text-heading_medium">
+                                <lightning-icon icon-name="standard:individual" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                {selectedPatient.fullName}
+                            </h3>
+                        </div>
+                        <div class="slds-col slds-text-align_right">
+                            <lightning-button 
+                                label="Close"
+                                icon-name="utility:close"
+                                onclick={clearSelectedPatient}>
+                            </lightning-button>
+                        </div>
+                    </div>
+
+                    <!-- Patient Demographics -->
+                    <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium">
+                        <div class="slds-col slds-size_1-of-4 slds-p-around_x-small">
+                            <p class="slds-text-title_caps slds-text-color_weak">Epic ID</p>
+                            <p><strong>{selectedPatient.epicId}</strong></p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4 slds-p-around_x-small">
+                            <p class="slds-text-title_caps slds-text-color_weak">Gender</p>
+                            <p><strong>{selectedPatient.gender}</strong></p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4 slds-p-around_x-small">
+                            <p class="slds-text-title_caps slds-text-color_weak">Date of Birth</p>
+                            <p><strong>{selectedPatient.birthDate}</strong></p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4 slds-p-around_x-small">
+                            <p class="slds-text-title_caps slds-text-color_weak">MRN</p>
+                            <p><strong>{selectedPatient.mrn}</strong></p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+                            <p class="slds-text-title_caps slds-text-color_weak">Phone</p>
+                            <p><strong>{selectedPatient.phone}</strong></p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+                            <p class="slds-text-title_caps slds-text-color_weak">Address</p>
+                            <p><strong>{selectedPatient.fullAddress}</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Conditions Table -->
+                    <template if:true={selectedPatient.conditions}>
+                        <h4 class="slds-text-heading_small slds-m-bottom_small">
+                            <lightning-icon icon-name="utility:warning" size="small" class="slds-m-right_x-small"></lightning-icon>
+                            Conditions ({selectedPatient.conditions.length})
+                        </h4>
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Condition</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Onset Date</th>
+                                    <th scope="col">Category</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={selectedPatient.conditions} for:item="condition">
+                                    <tr key={condition.conditionId}>
+                                        <td><strong>{condition.name}</strong></td>
+                                        <td>
+                                            <span class={condition.statusClass}>{condition.status}</span>
+                                        </td>
+                                        <td>{condition.onsetDate}</td>
+                                        <td>{condition.category}</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </template>
+                </div>
+            </template>
+
+            <!-- Sync Success Message -->
+            <template if:true={syncSuccess}>
+                <div class="slds-notify slds-notify_toast slds-theme_success slds-m-top_medium" role="status">
+                    <lightning-icon icon-name="utility:success" variant="inverse" size="small" class="slds-m-right_small"></lightning-icon>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">Patient Synced Successfully!</h2>
+                        <p>Patient has been added to Salesforce. A review task has been created for your care team.</p>
+                        <p class="slds-m-top_x-small">
+                            <lightning-button 
+                                label="View in Salesforce"
+                                variant="inverse"
+                                icon-name="utility:open"
+                                onclick={navigateToSyncedRecord}>
+                            </lightning-button>
+                        </p>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

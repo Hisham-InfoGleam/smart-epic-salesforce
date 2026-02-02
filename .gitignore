@@ -1,0 +1,57 @@
+# ============================================
+# PRIVATE/LOCAL FILES - NEVER COMMIT
+# ============================================
+
+# Internal documentation (Tier 2 - comprehensive notes, articles)
+docs/
+articles/
+notes/
+*.secret.md
+*.private.md
+*.local.md
+INTERNAL-*.md
+*-INTERNAL.md
+*-PRIVATE.md
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+secrets/
+config.local.*
+
+# ============================================
+# STANDARD IGNORES
+# ============================================
+
+# Dependencies
+node_modules/
+vendor/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+out/
+*.log
+
+# IDE & OS
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Salesforce local config
+.sf/
+.sfdx/
+*scratch-def.json
+
+# Test & coverage
+coverage/
+.nyc_output/
+*.lcov
