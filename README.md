@@ -153,7 +153,11 @@ See **Architecture Overview** section at the top for the full project structure.
 
 ---
 
-## � Part 2: Salesforce Health Cloud Integration
+## 📦 Part 2: Salesforce Health Cloud Integration
+
+> ⚠️ **Development Status: Work in Progress**
+>
+> The Salesforce integration is currently in early development and has **not been tested** in a live Salesforce environment. This code is provided as a reference implementation only and is **not suitable for production use**. Full testing, validation, and additional features are planned for future releases.
 
 This demonstrates **enterprise-grade** connectivity between Salesforce and Epic using Named Credentials (no secrets in code).
 
@@ -285,11 +289,11 @@ const codeChallenge = crypto.createHash('sha256')
 
 ---
 
-## � Known Limitations & Future Work
+## 🚧 Known Limitations & Roadmap
 
-> **This is a Proof of Concept (POC)** - some features require additional setup to fully test.
+> **This is a Proof of Concept (POC)** demonstrating integration patterns. Review the status of each component below before use.
 
-### Node.js App
+### Node.js App — Ready for Testing
 | Feature | Status | Notes |
 |---------|--------|-------|
 | Demo Mode | ✅ Complete | Works out of the box with sample data |
@@ -297,25 +301,22 @@ const codeChallenge = crypto.createHash('sha256')
 | FHIR R4 Queries | ✅ Complete | Patient, Observations, Conditions, Medications |
 | Session Management | ✅ Complete | Express sessions with secure cookies |
 
-### Salesforce Integration
+### Salesforce Integration — In Development
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Apex Classes | ✅ Code Complete | Requires Salesforce org deployment to test |
-| LWC Components | ✅ Code Complete | Requires Salesforce org deployment to test |
-| Unit Tests | ✅ Code Complete | Mock HTTP callouts included |
-| Named Credentials | ⚠️ Setup Required | Must configure in target Salesforce org |
-| Health Cloud Objects | 📋 Optional | Can use standard Contact for basic POC |
+| Apex Classes | 🔶 Code Written | Not yet deployed or tested in a Salesforce org |
+| LWC Components | 🔶 Code Written | Not yet deployed or tested in a Salesforce org |
+| Unit Tests | 🔶 Code Written | Includes mocks, but not executed against live org |
+| Named Credentials | ⚠️ Not Configured | Requires manual setup in target org |
+| End-to-End Testing | ❌ Not Started | Planned for future development phase |
 
-### To Complete Full Testing
+> **Important:** The Salesforce components are provided as reference code only. They have not been validated in a production or sandbox environment and should not be deployed to production systems without thorough testing.
 
-1. **Epic Live Auth**: Register app at https://fhir.epic.com and add your CLIENT_ID to `.env`
-2. **Salesforce Deployment**: Install Salesforce CLI and deploy to a Developer org:
-   ```bash
-   npm install -g @salesforce/cli
-   sf org login web -a MyDevOrg
-   cd salesforce && sf project deploy start -d force-app -o MyDevOrg
-   sf apex run test -n EpicConnectionControllerTest -n EpicPatientServiceTest -o MyDevOrg
-   ```
+### Planned for Future Releases
+- Deploy and validate Salesforce components in a Developer org
+- Execute Apex unit tests and achieve code coverage requirements
+- Add error handling and retry logic for production resilience
+- Document Named Credential setup with OAuth2 client credentials flow
 
 ---
 
