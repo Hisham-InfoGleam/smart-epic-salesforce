@@ -320,6 +320,24 @@ const codeChallenge = crypto.createHash('sha256')
 
 ---
 
-## �📄 License
+## 👨‍💻 Author
 
-MIT License - Use freely for learning and portfolio.
+**InfoGleam Health Systems**  
+*Healthcare Interoperability Specialists*
+
+**Hisham Hussein Alrashdan**  
+For questions or consulting inquiries: hisham@infogleam.com
+
+[www.infogleam.com](https://infogleam.com)
+
+---
+
+## 📄 License
+
+MIT License - This project is provided as an **educational resource** for the healthcare developer community.
+
+Use it freely to learn, build, and improve healthcare interoperability.
+
+---
+
+**Built with ❤️ for the healthcare community by [InfoGleam](https://infogleam.com)**

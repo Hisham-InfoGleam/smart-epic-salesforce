@@ -107,12 +107,23 @@ GitHub (Public)          Local Machine (Private)
 ✓ README.md (minimal)    ✓ articles/ folder  
 ✓ .env.example           ✓ *.secret.md, *.private.md
 ✓ Architecture diagrams  ✓ Connection strings
-✗ NO secrets             ✓ Proprietary logic details
-✗ NO internal IPs        ✓ Client-specific configs
-✗ NO marketing content   ✓ Upwork/freelance pitches
-✗ NO market research     ✓ Competitor analysis
-✗ NO client pitches      ✓ Sales templates
+✓ License (MIT)          ✓ Proprietary logic details
+✓ Author section         ✓ Client-specific configs
+✗ NO secrets             ✓ Upwork/freelance pitches
+✗ NO internal IPs        ✓ Competitor analysis
+✗ NO marketing content   ✓ Sales templates
+✗ NO Contributing tab    ✓ Contribution guidelines (private)
 ```
+
+## GitHub Repository Settings
+
+When creating a public repository:
+
+1. **License**: Always add MIT License
+2. **Description**: Add a clear, professional one-line description
+3. **Topics/Tags**: Add relevant keywords (e.g., fhir, healthcare, nodejs)
+4. **DO NOT** enable the "Contributing" guidelines tab in GitHub settings
+5. **DO NOT** add CONTRIBUTING.md file to public repos
 
 ## Content That Must NEVER Be Published
 
@@ -187,6 +198,38 @@ secrets/
 - Complex regex, SQL joins, ETL logic
 - Step-by-step deployment for private environments
 - Client-specific configurations
+
+## Required README Sections for Public Repos
+
+Every public repository README.md MUST end with these sections (in this order):
+
+```markdown
+---
+
+## 👨‍💻 Author
+
+**InfoGleam Health Systems**  
+*Healthcare Interoperability Specialists*
+
+**Hisham Hussein Alrashdan**  
+For questions or consulting inquiries: hisham@infogleam.com
+
+[www.infogleam.com](https://infogleam.com)
+
+---
+
+## 📄 License
+
+MIT License - This project is provided as an **educational resource** for the healthcare developer community.
+
+Use it freely to learn, build, and improve healthcare interoperability.
+
+---
+
+**Built with ❤️ for the healthcare community by [InfoGleam](https://infogleam.com)**
+```
+
+**Note:** Do NOT add a "Contributing" section to public repos. Contribution guidelines are for internal/private use only.
 - Research articles and reference materials
 
 ## Triggers
