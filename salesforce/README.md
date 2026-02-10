@@ -1,5 +1,18 @@
 # Salesforce + Epic FHIR Integration
 
+> ## ⚠️ IMPORTANT DISCLAIMER
+> 
+> **This Salesforce code is AI-generated for demonstration purposes only.**
+> 
+> - **NOT TESTED** — This code has not been deployed or validated in any Salesforce org (sandbox or production)
+> - **NO WARRANTY** — Provided "as-is" with no guarantee of functionality, accuracy, or completeness
+> - **REQUIRES VALIDATION** — Before using in any real environment, this code must be thoroughly tested by a qualified Salesforce developer with practical experience
+> - **DEMONSTRATION ONLY** — Created to showcase AI-assisted development capabilities and Epic FHIR integration patterns
+> 
+> **Do NOT deploy to production systems without proper testing and validation by experienced personnel.**
+
+---
+
 This directory contains Salesforce components for integrating with Epic's FHIR R4 API.
 
 ## 🏗️ Architecture
@@ -141,13 +154,50 @@ sfdx force:apex:test:run -c -r human -u YourOrgAlias
 
 ## 📈 Features Complete
 
+> **Reminder:** All features below represent code that has been written but NOT tested. See disclaimer at the top of this document.
+
 | Feature | Status | Description |
 |---------|--------|-------------|
-| Metadata endpoint check | ✅ Complete | Verify Epic connectivity |
-| FHIR resource discovery | ✅ Complete | List supported resources |
-| Patient search | ✅ Complete | Search by name |
-| Patient details | ✅ Complete | View demographics + conditions |
-| Sync to Salesforce | ✅ Complete | Create/update Contact |
-| Workflow automation | ✅ Complete | Auto-create review Task |
-| Custom fields | ✅ Complete | Epic ID, MRN, Last Sync |
+| Metadata endpoint check | 🔶 Code Written | Verify Epic connectivity |
+| FHIR resource discovery | 🔶 Code Written | List supported resources |
+| Patient search | 🔶 Code Written | Search by name |
+| Patient details | 🔶 Code Written | View demographics + conditions |
+| Sync to Salesforce | 🔶 Code Written | Create/update Contact |
+| Workflow automation | 🔶 Code Written | Auto-create review Task |
+| Custom fields | 🔶 Code Written | Epic ID, MRN, Last Sync |
+
+---
+
+## 🤖 AI Generation Notice
+
+This Salesforce integration code was generated using AI (GitHub Copilot / Claude) to demonstrate:
+
+1. **AI-Assisted Development** — How AI can accelerate healthcare integration prototyping
+2. **FHIR Integration Patterns** — Standard approaches for Epic↔Salesforce connectivity
+3. **Best Practice Templates** — Code structure following Salesforce development conventions
+
+### What This Means for You
+
+If you want to use this code in a real project:
+
+1. **Clone and review** all Apex classes and LWC components
+2. **Set up a Salesforce Developer org** and deploy the components
+3. **Run all unit tests** and verify code coverage (required: 75%+)
+4. **Configure Named Credentials** with proper OAuth2 authentication
+5. **Test end-to-end** with Epic's sandbox environment
+6. **Engage a qualified Salesforce developer** for production deployment
+
+### Why This Approach?
+
+This POC demonstrates that AI can generate functional templates for complex healthcare integrations, significantly reducing initial development time. However, **human expertise remains essential** for:
+
+- Security review and hardening
+- Performance optimization
+- Error handling for production scenarios
+- Compliance verification (HIPAA, SOC2, etc.)
+- Organization-specific customization
+
+---
+
+**Built with AI assistance for the healthcare developer community.**
 

@@ -301,16 +301,19 @@ const codeChallenge = crypto.createHash('sha256')
 | FHIR R4 Queries | ✅ Complete | Patient, Observations, Conditions, Medications |
 | Session Management | ✅ Complete | Express sessions with secure cookies |
 
-### Salesforce Integration — In Development
+### Salesforce Integration — AI-Generated (Not Tested)
+
+> ⚠️ **The Salesforce code is AI-generated for demonstration purposes only.** It has not been deployed or tested in any Salesforce environment. Before using, it must be validated by a qualified Salesforce developer with practical experience. No warranty or guarantee is provided.
+
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Apex Classes | 🔶 Code Written | Not yet deployed or tested in a Salesforce org |
-| LWC Components | 🔶 Code Written | Not yet deployed or tested in a Salesforce org |
-| Unit Tests | 🔶 Code Written | Includes mocks, but not executed against live org |
+| Apex Classes | 🔶 AI-Generated | Not deployed or tested in any Salesforce org |
+| LWC Components | 🔶 AI-Generated | Not deployed or tested in any Salesforce org |
+| Unit Tests | 🔶 AI-Generated | Includes mocks, but never executed |
 | Named Credentials | ⚠️ Not Configured | Requires manual setup in target org |
-| End-to-End Testing | ❌ Not Started | Planned for future development phase |
+| End-to-End Testing | ❌ Not Started | Required before any real use |
 
-> **Important:** The Salesforce components are provided as reference code only. They have not been validated in a production or sandbox environment and should not be deployed to production systems without thorough testing.
+> **See [salesforce/README.md](salesforce/README.md) for full disclaimer and usage guidance.**
 
 ### Planned for Future Releases
 - Deploy and validate Salesforce components in a Developer org
