@@ -325,8 +325,7 @@ const codeChallenge = crypto.createHash('sha256')
 
 ## 👨‍💻 Author
 
-**InfoGleam Health Systems**  
-*Healthcare Interoperability Specialists*
+**InfoGleam Systems**  
 
 **Hisham Hussein Alrashdan**  
 For questions or consulting inquiries: hisham@infogleam.com
