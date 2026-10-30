@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMART on FHIR - Epic Sandbox Demo</title>
+  <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Patient Health Viewer</h1>
+    <p class="subtitle">SMART on FHIR demo app for the Epic sandbox</p>
+
+    <div class="card">
+      <h2>What this app does</h2>
+      <p>This app connects to Epic's FHIR R4 sandbox with a SMART on FHIR standalone launch. You sign in to Epic as a test patient, and the app shows that patient's data.</p>
+
+      <div class="features">
+        <div class="feature">
+          <div class="feature-title">Patient</div>
+          <div class="feature-desc">Demographics and contact details</div>
+        </div>
+        <div class="feature">
+          <div class="feature-title">Lab results and vitals</div>
+          <div class="feature-desc">Observation resources</div>
+        </div>
+        <div class="feature">
+          <div class="feature-title">Conditions</div>
+          <div class="feature-desc">Problem list and diagnoses</div>
+        </div>
+        <div class="feature">
+          <div class="feature-title">Medications</div>
+          <div class="feature-desc">MedicationRequest resources</div>
+        </div>
+      </div>
+    </div>
+
+    <a href="/launch" class="launch-btn">Connect to Epic</a>
+
+    <div id="demo-option" hidden>
+      <p class="or-divider">or</p>
+      <a href="/demo" class="demo-btn">View demo (sample data, no login)</a>
+    </div>
+
+    <div class="info">
+      <h3>How it works</h3>
+      <ul>
+        <li>OAuth 2.0 authorization code flow with PKCE (S256)</li>
+        <li>Read-only patient scopes</li>
+        <li>Tokens stay on the server. The browser only gets a session cookie.</li>
+        <li>Demo project for the Epic sandbox. Not for real patient data.</li>
+      </ul>
+    </div>
+
+    <div class="badges">
+      <span class="badge">FHIR R4</span>
+      <span class="badge">SMART standalone launch</span>
+      <span class="badge">OAuth 2.0</span>
+      <span class="badge">PKCE</span>
+    </div>
+  </div>
+
+  <script src="/js/index.js"></script>
+</body>
+</html>

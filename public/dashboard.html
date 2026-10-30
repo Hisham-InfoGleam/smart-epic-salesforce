@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Dashboard - SMART on FHIR</title>
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+  <header class="header">
+    <h1><span>Patient Health Dashboard</span></h1>
+    <form method="post" action="/logout" class="logout-form">
+      <button type="submit" class="logout-btn">Log out</button>
+    </form>
+  </header>
+
+  <div class="demo-banner" id="demo-banner" hidden>
+    Demo mode: this page shows sample FHIR data, not data from Epic.
+    <a href="/launch">Connect to Epic</a> to see sandbox data.
+  </div>
+
+  <main class="main">
+    <div class="session-info">
+      <span>Connected to: <code id="fhir-server">Loading...</code></span>
+      <span>Patient ID: <code id="patient-id">Loading...</code></span>
+    </div>
+
+    <div class="patient-header" id="patient-header">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading patient information...</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <div class="card-header">
+          <h3>Lab Results and Vitals</h3>
+        </div>
+        <div class="card-body" id="observations-list">
+          <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading observations...</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h3>Conditions and Diagnoses</h3>
+        </div>
+        <div class="card-body" id="conditions-list">
+          <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading conditions...</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h3>Medications</h3>
+        </div>
+        <div class="card-body" id="medications-list">
+          <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading medications...</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="/js/escape-html.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

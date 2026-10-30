@@ -1,0 +1,49 @@
+# Local working files (not part of this repo)
+private/
+notes/
+docs/
+articles/
+*.local.md
+*.private.md
+*.secret.md
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+secrets/
+config.local.*
+
+# Editor and tool settings
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Dependencies
+node_modules/
+vendor/
+.pnpm-store/
+
+# Build output and logs
+dist/
+build/
+out/
+*.log
+
+# Salesforce local config
+.sf/
+.sfdx/
+*scratch-def.json
+
+# Test coverage
+coverage/
+.nyc_output/
+*.lcov

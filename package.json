@@ -1,0 +1,24 @@
+{
+  "name": "smart-epic-salesforce",
+  "version": "1.0.0",
+  "description": "SMART on FHIR standalone launch demo for the Epic sandbox, with sample Salesforce components",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "helmet": "^7.1.0"
+  },
+  "keywords": ["smart", "fhir", "epic", "salesforce", "healthcare", "hl7", "interoperability"],
+  "author": "Hisham Alrashdan <hisham@infogleam.com> (https://infogleam.com)",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

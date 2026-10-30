@@ -1,0 +1,299 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0f0f1a;
+  color: #fff;
+  min-height: 100vh;
+}
+
+.header {
+  background: linear-gradient(90deg, #1a1a2e, #16213e);
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header h1 {
+  font-size: 1.5rem;
+}
+
+.header h1 span {
+  background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logout-form {
+  margin: 0;
+}
+
+.logout-btn {
+  background: rgba(255, 100, 100, 0.2);
+  color: #ff6b6b;
+  padding: 10px 20px;
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  transition: all 0.3s;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 100, 100, 0.3);
+}
+
+.demo-banner {
+  background: linear-gradient(90deg, #7b2cbf, #5a189a);
+  color: white;
+  text-align: center;
+  padding: 12px 20px;
+  font-size: 0.95rem;
+}
+
+.demo-banner a {
+  color: #00d4ff;
+  text-decoration: underline;
+}
+
+.main {
+  padding: 30px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.session-info {
+  background: rgba(123, 44, 191, 0.1);
+  border: 1px solid rgba(123, 44, 191, 0.3);
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.session-info span {
+  color: #a0a0a0;
+  font-size: 0.9rem;
+}
+
+.session-info code {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  color: #00d4ff;
+}
+
+.patient-header {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(123, 44, 191, 0.1));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.patient-avatar {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.patient-info h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.patient-meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: #a0a0a0;
+}
+
+.meta-item strong {
+  color: #00d4ff;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 25px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.card-header {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.card-header h3 {
+  font-size: 1.1rem;
+  color: #00d4ff;
+}
+
+.card-body {
+  padding: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.card-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.card-body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.card-body::-webkit-scrollbar-thumb {
+  background: rgba(0, 212, 255, 0.3);
+  border-radius: 3px;
+}
+
+.item {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 12px;
+  transition: all 0.3s;
+}
+
+.item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.item-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.item-value {
+  font-size: 1.3rem;
+  color: #00d4ff;
+  margin-bottom: 5px;
+}
+
+.item-detail {
+  font-size: 0.9rem;
+  color: #a0a0a0;
+  margin: 5px 0;
+}
+
+.item-meta {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.item-date {
+  font-size: 0.8rem;
+  color: #7b2cbf;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-active {
+  background: rgba(0, 200, 150, 0.2);
+  color: #00c896;
+}
+
+.status-completed {
+  background: rgba(100, 100, 255, 0.2);
+  color: #8888ff;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(0, 212, 255, 0.1);
+  border-top-color: #00d4ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 15px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error {
+  background: rgba(255, 100, 100, 0.1);
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  color: #ff6b6b;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.error a {
+  color: #00d4ff;
+}
+
+.empty {
+  text-align: center;
+  padding: 30px;
+  color: #666;
+}
+
+.empty-help {
+  font-size: 0.8rem;
+  margin-top: 10px;
+  color: #666;
+}
+
+.empty-help a {
+  color: #00d4ff;
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>59.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Epic Patient Search and Sync</masterLabel>
+    <description>Searches patients in the Epic FHIR API and syncs a selected patient to a Contact</description>
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightning__Tab</target>
+    </targets>
+    <targetConfigs>
+        <!-- lightning__Tab does not take properties, so it is not listed here. -->
+        <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage">
+            <property name="title" type="String" default="Epic Patient Search" label="Card Title"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>
